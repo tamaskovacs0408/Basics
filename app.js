@@ -115,13 +115,45 @@ productData.map((product) => {
 
 
 // PRODUCT IMPRESSION GA EVENT
+
+/* 
+It's recommended that you use the following command to clear the ecommerce object prior to pushing an ecommerce event to the data layer. Clearing the object will prevent multiple ecommerce events on a page from affecting each other.
+*/
+
 window.addEventListener('load', () => {
   productData.forEach((product) => {
     window.dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
     window.dataLayer.push({
       'event': 'view_item_list',
       'ecommerce': {
-        item_list_name: "Products",
+        'item_list_name': "Products",
+        'items': [
+          {
+            'item_id': product.id,
+            'item_name': product.name,
+            'price': product.price,
+            'currency': product.currency,
+            'item_category': product.category,
+            'discount': product.discount
+          }
+        ]
+      }
+    });
+  });
+});
+
+
+// PRODUCT CLICK GA EVENT
+
+const products = document.querySelectorAll('.product');
+
+products.forEach(product => {
+  product.addEventListener('click', () => {
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      'event': 'select_item',
+      'ecommerce': {
+        'item_list_name': "Products",
         'items': [
           {
             'item_id': product.id,
