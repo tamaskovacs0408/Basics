@@ -3,14 +3,18 @@
 const productData = [
   {
     id: "1",
+    category: 'Quartz',
+    currency: '$',
     name: "Product 1",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
     price: 19.99,
-    "sale-price": 15.99,
+    discount: 0.8,
   },
   {
     id: "2",
+    category: 'Automatic',
+    currency: '$',
     name: "Product 2",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
@@ -18,14 +22,18 @@ const productData = [
   },
   {
     id: "3",
+    category: 'Diver',
+    currency: '$',
     name: "Product 3",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
     price: 12.99,
-    "sale-price": 9.99,
+    discount: 0.7,
   },
   {
     id: "4",
+    category: 'Solar',
+    currency: '$',
     name: "Product 4",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
@@ -33,14 +41,18 @@ const productData = [
   },
   {
     id: "5",
+    category: 'Quartz',
+    currency: '$',
     name: "Product 5",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
     price: 29.95,
-    "sale-price": 24.95,
+    discount: 0.5,
   },
   {
     id: "6",
+    category: 'Diver',
+    currency: '$',
     name: "Product 6",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
@@ -48,14 +60,18 @@ const productData = [
   },
   {
     id: "7",
+    category: 'Solar',
+    currency: '$',
     name: "Product 7",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
     price: 8.99,
-    "sale-price": 6.99,
+    discount: 0.8,
   },
   {
     id: "8",
+    category: 'Quartz',
+    currency: '$',
     name: "Product 8",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
@@ -63,15 +79,25 @@ const productData = [
   },
   {
     id: "9",
+    category: 'Automatic',
+    currency: '$',
     name: "Product 9",
     image:
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80",
     price: 21.95,
-    "sale-price": 18.95,
+    discount: 0.7,
   },
 ];
 
 const mainDiv = document.querySelector(".main-container");
+
+let salePrice;
+productData.forEach(product => {
+  if (product.discount) {
+    salePrice = product.price - (product.price * product.discount);
+    product["sale-price"] = Number(salePrice.toFixed(2));
+  }
+});
 
 productData.map((product) => {
   mainDiv.innerHTML += `<div class="product">
@@ -88,17 +114,22 @@ productData.map((product) => {
 });
 
 
+// PRODUCT IMPRESSION GA EVENT
 window.addEventListener('load', () => {
   productData.forEach((product) => {
+    window.dataLayer.push({ ecommerce: null });  // Clear the previous ecommerce object.
     window.dataLayer.push({
       'event': 'view_item_list',
       'ecommerce': {
-        'products': [
+        item_list_name: "Products",
+        'items': [
           {
-            'product_id': product.id,
-            'product_name': product.name,
-            'product_price': product.price,
-            'product_sale_price': product["sale-price"]
+            'item_id': product.id,
+            'item_name': product.name,
+            'price': product.price,
+            'currency': product.currency,
+            'item_category': product.category,
+            'discount': product.discount
           }
         ]
       }
