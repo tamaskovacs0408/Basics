@@ -100,7 +100,7 @@ productData.forEach(product => {
 });
 
 productData.map((product) => {
-  mainDiv.innerHTML += `<div class="product">
+  mainDiv.innerHTML += `<div class="product" data-product-id="${product.id}">
   <img src="${product.image}" alt="${product.name}" class="product-image" />
   <h2>${product.name}</h2>
   <h3 class="product-price">$${product.price}</h3>
@@ -145,26 +145,29 @@ window.addEventListener('load', () => {
 
 // PRODUCT CLICK GA EVENT
 
-const products = document.querySelectorAll('.product');
 
-products.forEach(product => {
-  product.addEventListener('click', () => {
-    window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-      'event': 'select_item',
-      'ecommerce': {
-        'item_list_name': "Products",
-        'items': [
-          {
-            'item_id': product.id,
-            'item_name': product.name,
-            'price': product.price,
-            'currency': product.currency,
-            'item_category': product.category,
-            'discount': product.discount
-          }
-        ]
-      }
+productData.forEach(product => {
+  const productElement = document.querySelector(`[data-product-id="${product.id}"]`);
+  
+  if (productElement) {
+    productElement.addEventListener('click', () => {
+      window.dataLayer.push({ ecommerce: null });  // Töröld az előző ecommerce objektumot
+      window.dataLayer.push({
+        'event': 'select_item',
+        'ecommerce': {
+          'item_list_name': "Products",
+          'items': [
+            {
+              'item_id': product.id,
+              'item_name': product.name,
+              'price': product.price,
+              'currency': product.currency,
+              'item_category': product.category,
+              'discount': product.discount
+            }
+          ]
+        }
+      });
     });
-  });
+  }
 });
