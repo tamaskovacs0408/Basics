@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable quotes */
 const productData = [
   {
@@ -84,4 +85,23 @@ productData.map((product) => {
   }
   <button>Add to Cart</button>
 </div>`;
+});
+
+
+window.addEventListener('load', () => {
+  productData.forEach((product) => {
+    window.dataLayer.push({
+      'event': 'view_item_list',
+      'ecommerce': {
+        'products': [
+          {
+            'product_id': product.id,
+            'product_name': product.name,
+            'product_price': product.price,
+            'product_sale_price': product["sale-price"]
+          }
+        ]
+      }
+    });
+  });
 });
